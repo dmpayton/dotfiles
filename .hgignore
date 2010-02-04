@@ -1,0 +1,9 @@
+syntax: glob
+.hgignore
+*.pyc
+dist
+MANIFEST
+TAGS
+.svn*
+*.svn*
+*.DS_Store*
