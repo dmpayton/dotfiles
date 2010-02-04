@@ -12,7 +12,7 @@ alias rm="rm -iv"
 export CLICOLOR=1
 export LSCOLORS="ExGxcxdxbxegedabagacad"
 
-# Hooray Nano!
+# Hooray Nano! *ducks*
 export EDITOR=nano
 
 # Prompt is not as complicated as the format string would
@@ -23,7 +23,7 @@ export EDITOR=nano
 # with user/host in green and working directory blue.
 # The first one sets the terminal title, the second is the prompt.
 export PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]"
-export PS1="$PS1(\[\e[0;37m\]\A\[\e[0;37m\]) \[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \$ "
+export PS1="$PS1(\[\e[0;37m\]\A\[\e[0;37m\]) \[\033[01;32m\]\u@\h\[\033[01;34m\] \[\e[0;36m\]\w\[\e[0;37m\] \$ "
 
 # Env variables and functions for virtualenvwrapper.
 export WORKON_HOME=$HOME/dev/virtualenvs

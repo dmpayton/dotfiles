@@ -1,0 +1,64 @@
+
+## The characters treated as closing brackets when justifying
+## paragraphs.  They cannot contain blank characters.  Only closing
+## punctuation, optionally followed by closing brackets, can end
+## sentences.
+##
+set brackets ""')>]}"
+
+## Constantly display the cursor position in the statusbar.  Note that
+## this overrides "quickblank".
+set const
+
+
+
+## The opening and closing brackets that can be found by bracket
+## searches.  They cannot contain blank characters.  The former set must
+## come before the latter set, and both must be in the same order.
+##
+set matchbrackets "(<[{)>]}"
+
+## Allow multiple file buffers (inserting a file will put it into a
+## separate buffer).  You must have configured with --enable-multibuffer
+## for this to work.
+##
+set multibuffer
+
+## Don't wrap text at all.
+set nowrap
+
+## The characters treated as closing punctuation when justifying
+## paragraphs.  They cannot contain blank characters.  Only closing
+## punctuation, optionally followed by closing brackets, can end
+## sentences.
+##
+set punct "!.?"
+
+## Fix Backspace/Delete confusion problem.
+# set rebinddelete
+
+## Allow nano to be suspended.
+set suspend
+
+## Use this tab size instead of the default; it must be greater than 0.
+set tabsize 4
+
+## Convert typed tabs to spaces.
+set tabstospaces
+
+
+
+## Syntax Highlighting
+include "~/.nano/apache2.nanorc"
+include "~/.nano/css.nanorc"
+include "~/.nano/default.nanorc"
+#include "~/.nano/etc-stuff.nanorc"
+include "~/.nano/html.nanorc"
+include "~/.nano/js.nanorc"
+include "~/.nano/man.nanorc"
+include "~/.nano/nanorc.nanorc"
+#include "~/.nano/others.nanorc"
+include "~/.nano/perl.nanorc"
+include "~/.nano/python.nanorc"
+include "~/.nano/ruby.nanorc"
+include "~/.nano/sh.nanorc"
