@@ -12,24 +12,67 @@ alias rm="rm -iv"
 export CLICOLOR=1
 export LSCOLORS="ExGxcxdxbxegedabagacad"
 
-# More colors
+# Color aliases
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
+# Define some colors to use in the prompt
+NO_COLOR="\[\033[0m\]"
+LIGHT_WHITE="\[\033[1;37m\]"
+WHITE="\[\033[0;37m\]"
+GRAY="\[\033[1;30m\]"
+BLACK="\[\033[0;30m\]"
+
+RED="\[\033[0;31m\]"
+LIGHT_RED="\[\033[1;31m\]"
+GREEN="\[\033[0;32m\]"
+LIGHT_GREEN="\[\033[1;32m\]"
+YELLOW="\[\033[0;33m\]"
+LIGHT_YELLOW="\[\033[1;33m\]"
+BLUE="\[\033[0;34m\]"
+LIGHT_BLUE="\[\033[1;34m\]"
+MAGENTA="\[\033[0;35m\]"
+LIGHT_MAGENTA="\[\033[1;35m\]"
+CYAN="\[\033[0;36m\]"
+LIGHT_CYAN="\[\033[1;36m\]"
+
+# Change the prompt character dpeending on if we're in a repository
+function prompt_char {
+    git branch >/dev/null 2>/dev/null && echo '±' && return
+    hg root >/dev/null 2>/dev/null && echo '☿' && return
+    echo '$'
+}
+
+## display the current git branch
+__git_ps1() {
+	local b="$(git symbolic-ref HEAD 2>/dev/null)"
+	if [ -n "$b" ]; then
+        printf " (git:%s)" "${b##refs/heads/}"
+	fi
+}
+
+## display the current mercurial branch
+__hg_ps1() {
+    local branch="$(hg branch 2> /dev/null)"
+    if [ -n "$branch" ]; then
+        printf " (hg:%s)" "${branch}"
+    fi
+}
+
+## display the current subversion revision
+__svn_ps1() {
+    if [[ -d ".svn" ]]; then
+        printf " (svn:$(svn info | sed -n -e '/^Revision: \([0-9]*\).*$/s//\1/p' ))"
+    fi
+}
+
+export PS1="\[\e]0;\u@\h: \w\a\]"
+export PS1="$PS1${WHITE}(\t) ${LIGHT_GREEN}\u ${LIGHT_WHITE}@ ${LIGHT_RED}\h ${LIGHT_WHITE}in ${LIGHT_CYAN}\w${WHITE}\$(__git_ps1)\$(__hg_ps1)\$(__svn_ps1)\n${LIGHT_WHITE}\$(prompt_char)${WHITE} "
+
 # Hooray Nano! *ducks*
 export EDITOR=nano
-
-# Prompt is not as complicated as the format string would
-# suggest. This one does:
-#
-# (time) user@host:dir $
-#
-# with user/host in green and working directory blue.
-# The first one sets the terminal title, the second is the prompt.
-export PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]"
-export PS1="$PS1(\[\e[0;37m\]\A\[\e[0;37m\]) \[\033[01;32m\]\u@\h\[\033[01;34m\] \[\e[0;36m\]\w\[\e[0;37m\] \$ "
 
 # Env variables and functions for virtualenvwrapper.
 export WORKON_HOME=$HOME/dev/virtualenvs

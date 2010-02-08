@@ -6,4 +6,3 @@ username = Derek Payton <derek.payton@gmail.com>
 [extensions]
 hgext.bookmarks =
 hggit =
-
