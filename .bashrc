@@ -76,7 +76,7 @@ export EDITOR=nano
 
 # Env variables and functions for virtualenvwrapper.
 export WORKON_HOME=$HOME/dev/virtualenvs
-#. $HOME/bin/virtualenvwrapper_bashrc
+. $HOME/bin/virtualenvwrapper_bashrc
 
 # Some useful additional completion.
 #. $HOME/dev/django/svn/django/trunk/extras/django_bash_completion
