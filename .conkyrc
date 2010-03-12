@@ -1,0 +1,61 @@
+# .conkyrc
+
+update_interval 1.0
+
+
+double_buffer yes
+own_window yes
+own_window_type override
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+use_xft yes
+xftfont Bitstream Vera Sans:size=9
+
+maximum_width 300
+default_color white
+alignment top_right
+
+uppercase no
+
+TEXT
+$nodename - $kernel
+
+${color lightgrey}Uptime:$color $uptime $alignr${color lightgrey}Load:$color $loadavg
+${color lightgrey}CPU: $color ${freq} Mhz $alignr${color lightgrey} Usage:$color $cpu%
+$color${cpugraph}
+#${color lightgrey}Processor temperature: $color${acpitemp}°C
+#${color lightgrey}Battery: $color ${battery}
+
+${color lightgrey}RAM:$color $mem/$memmax - $memperc%
+${membar}
+
+${color lightgrey}SWAP:$color $swap/$swapmax - $swapperc%
+${swapbar}
+
+${color lightgrey}Highest CPU:
+${color #ffcb48} ${top name 1}${top_mem cpu 1}
+$color ${top name 2}${top cpu 2}
+$color ${top name 3}${top cpu 3}
+$color ${top name 4}${top cpu 4}
+
+${color lightgrey}Highest MEM:
+${color #ffcb48} ${top_mem name 1}${top_mem mem 1}
+$color ${top_mem name 2}${top_mem mem 2}
+$color ${top_mem name 3}${top_mem mem 3}
+$color ${top_mem name 4}${top_mem mem 4}
+
+${color grey}Disk usage: $color${fs_free /} of ${fs_size /}
+${fs_bar 6 /}
+
+#${color #ffcb48}Wi-Fi ${hr 1}
+#${color lightgrey}Wireless signal: $color${wireless_link_qual ath0}%
+#${color lightgrey}IP address: $color${addr ath0}
+#${color lightgrey}Download speed: $color${downspeedf wifi0} Kb/sec
+#${downspeedgraph wifi0}
+#${color red}Downloaded: $color${totaldown wifi0} $alignr ${color green}Uploaded: $color${totalup wifi0}
+${color #ffcb48}Ethernet ${hr 1}
+${color lightgrey}IP address: $alignr$color${addr eth0}
+${color lightgrey}Download speed: $color${downspeedf eth0} Kb/sec
+${downspeedgraph eth0}
+${color red}Downloaded: $color${totaldown eth0} $alignr ${color green}Uploaded: $color${totalup eth0}
