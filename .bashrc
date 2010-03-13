@@ -79,5 +79,5 @@ export WORKON_HOME=$HOME/dev/virtualenvs
 . $HOME/bin/virtualenvwrapper_bashrc
 
 # Some useful additional completion.
-#. $HOME/dev/django/svn/django/trunk/extras/django_bash_completion
+. $HOME/bin/django_bash_completion
 #. $HOME/bin/hg_completion
