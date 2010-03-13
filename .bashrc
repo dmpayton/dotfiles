@@ -64,7 +64,7 @@ __hg_ps1() {
 ## display the current subversion revision
 __svn_ps1() {
     if [[ -d ".svn" ]]; then
-        printf " (svn:$(svn info | sed -n -e '/^Revision: \([0-9]*\).*$/s//\1/p' ))"
+        printf " (svn:%s)" `svnversion`
     fi
 }
 
