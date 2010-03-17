@@ -2,7 +2,6 @@
 
 update_interval 1.0
 
-
 double_buffer yes
 own_window yes
 own_window_type override
@@ -19,34 +18,49 @@ alignment top_right
 uppercase no
 
 TEXT
-$nodename - $kernel
+${color green}${exec whoami}$color@${color red}$nodename
+${color lightgrey}Distro: $color${exec cat /etc/issue.net} ($kernel)
+${color lightgrey}Uptime: $color$uptime
 
-${color lightgrey}Uptime:$color $uptime $alignr${color lightgrey}Load:$color $loadavg
-${color lightgrey}CPU: $color ${freq} Mhz $alignr${color lightgrey} Usage:$color $cpu%
-$color${cpugraph}
+${color #ffcb48}CPU ${hr 1}
+$color${cpu cpu0}% $alignr${color lightgrey}Load: $color$loadavg
+$color${cpugraph cpu0}
+Core 1 ${cpubar cpu1}
+Core 2 ${cpubar cpu2}
+Core 3 ${cpubar cpu3}
+Core 4 ${cpubar cpu4}
+
+${color lightgrey}Highest CPU:
+${color #ffcb48} ${top name 1}$alignc${top_mem cpu 1}
+$color ${top name 2}$alignc${top cpu 2}
+$color ${top name 3}$alignc${top cpu 3}
+$color ${top name 4}$alignc${top cpu 4}
+
+${color #ffcb48}GPU ${hr 1}
+${color lightgray}Temp: $color${nvidia temp}° ${alignr}${color lightgrey}(Keep it under $color${nvidia threshold}°${color lightgrey})
 #${color lightgrey}Processor temperature: $color${acpitemp}°C
 #${color lightgrey}Battery: $color ${battery}
 
-${color lightgrey}RAM:$color $mem/$memmax - $memperc%
+${color #ffcb48}Memory ${hr 1}
+${color lightgrey}RAM $alignr$color$mem / $memmax - $memperc%
 ${membar}
-
-${color lightgrey}SWAP:$color $swap/$swapmax - $swapperc%
+${color lightgrey}SWAP $alignr$color$swap / $swapmax - $swapperc%
 ${swapbar}
 
-${color lightgrey}Highest CPU:
-${color #ffcb48} ${top name 1}${top_mem cpu 1}
-$color ${top name 2}${top cpu 2}
-$color ${top name 3}${top cpu 3}
-$color ${top name 4}${top cpu 4}
-
 ${color lightgrey}Highest MEM:
-${color #ffcb48} ${top_mem name 1}${top_mem mem 1}
-$color ${top_mem name 2}${top_mem mem 2}
-$color ${top_mem name 3}${top_mem mem 3}
-$color ${top_mem name 4}${top_mem mem 4}
+${color #ffcb48} ${top_mem name 1}$alignc${top_mem mem 1}
+$color ${top_mem name 2}$alignc${top_mem mem 2}
+$color ${top_mem name 3}$alignc${top_mem mem 3}
+$color ${top_mem name 4}$alignc${top_mem mem 4}
 
-${color grey}Disk usage: $color${fs_free /} of ${fs_size /}
+${color #ffcb48}Disk ${hr 1}
+${color grey}/ $alignr$color${fs_used /} of ${fs_size /}
 ${fs_bar 6 /}
+${color grey}/home $alignr$color${fs_used /home} of ${fs_size /home}
+${fs_bar 6 /home}
+
+${color lightgrey}Disk IO ${alignr}${color}$diskio_read / $diskio_write
+${diskiograph}
 
 #${color #ffcb48}Wi-Fi ${hr 1}
 #${color lightgrey}Wireless signal: $color${wireless_link_qual ath0}%
@@ -56,6 +70,7 @@ ${fs_bar 6 /}
 #${color red}Downloaded: $color${totaldown wifi0} $alignr ${color green}Uploaded: $color${totalup wifi0}
 ${color #ffcb48}Ethernet ${hr 1}
 ${color lightgrey}IP address: $alignr$color${addr eth0}
-${color lightgrey}Download speed: $color${downspeedf eth0} Kb/sec
+${color lightgrey}Download speed: $alignr$color${downspeedf eth0} Kb/sec
+${color lightgrey}Upload speed: $alignr$color${upspeedf eth0} Kb/sec
 ${downspeedgraph eth0}
 ${color red}Downloaded: $color${totaldown eth0} $alignr ${color green}Uploaded: $color${totalup eth0}
