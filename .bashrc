@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PATH=$PATH:/opt/local/bin
+
 # I like confirming destructive operations.
 alias cp="cp -iv"
 alias mv="mv -iv"
@@ -13,10 +15,10 @@ export CLICOLOR=1
 export LSCOLORS="ExGxcxdxbxegedabagacad"
 
 # Color aliases
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
+#alias ls='ls --color=auto'
+#alias grep='grep --color=auto'
+#alias fgrep='fgrep --color=auto'
+#alias egrep='egrep --color=auto'
 
 # Define some colors to use in the prompt
 NO_COLOR="\[\033[0m\]"
@@ -68,8 +70,17 @@ __svn_ps1() {
     fi
 }
 
-export PS1="\[\e]0;\u@\h: \w\a\]"
-export PS1="$PS1${WHITE}(\t) ${LIGHT_GREEN}\u ${LIGHT_WHITE}@ ${LIGHT_RED}\h ${LIGHT_WHITE}in ${LIGHT_CYAN}\w${WHITE}\$(__git_ps1)\$(__hg_ps1)\$(__svn_ps1)\n${LIGHT_WHITE}\$(prompt_char)${WHITE} "
+## My super cool prompt
+export MY_PROMPT="\[\e]0;\u@\h: \w\a\]"
+export MY_PROMPT="$MY_PROMPT${WHITE}[\t] ${LIGHT_GREEN}\u ${LIGHT_WHITE}@ ${LIGHT_RED}\h ${LIGHT_WHITE}in ${LIGHT_CYAN}\w${WHITE}\$(__git_ps1)\$(__hg_ps1)\$(__svn_ps1)\n${LIGHT_WHITE}\$(prompt_char)${NO_COLOR} "
+
+## Basic prompt for everyone else
+export BASIC_PROMPT="${WHITE}[\t] ${LIGHT_GREEN}\u@\h${LIGHT_WHITE}:${LIGHT_BLUE}\w${WHITE}\$${NO_COLOR} "
+
+export PS1=$MY_PROMPT
+
+alias basic_prompt="export PS1=\$BASIC_PROMPT"
+alias my_prompt="export PS1=\$MY_PROMPT"
 
 # Hooray Nano! *ducks*
 export EDITOR=nano
