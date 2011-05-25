@@ -8,4 +8,4 @@ TAGS
 *.svn*
 *.DS_Store*
 *.kpf
-
+*.komodoproject
