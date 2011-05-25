@@ -25,3 +25,7 @@ set completion-ignore-case On
 "\e[5~": beginning-of-history
 "\e[6~": end-of-history
 "\e[2~": quoted-insert
+
+set meta-flag on
+set convert-meta off
+set output-meta on

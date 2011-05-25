@@ -1,0 +1,10 @@
+! to merge:
+! xrdb -merge ~/.Xresources
+
+xterm*background: gray5
+xterm*foreground: gray95
+xterm*faceName: Andale Mono
+xterm*faceSize: 10
+XTerm*VT100.translations: #override <Btn1Up>: select-end(PRIMARY, CLIPBOARD, CUT_BUFFER0)
+XTerm*metaSendsEscape: true
+XTerm*eightBitInput: false
