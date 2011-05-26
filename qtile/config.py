@@ -6,11 +6,11 @@ mod = 'mod4'
 
 keys = [
     ## Layout, group, and screen modifiers
-    Key([mod], 'k', lazy.layout.down()),
     Key([mod], 'j', lazy.layout.up()),
+    Key([mod], 'k', lazy.layout.down()),
 
-    Key([mod, 'control'], 'k', lazy.layout.shuffle_down()),
     Key([mod, 'control'], 'j', lazy.layout.shuffle_up()),
+    Key([mod, 'control'], 'k', lazy.layout.shuffle_down()),
 
     Key([mod], 'space', lazy.layout.next()),
     Key([mod], 'Tab', lazy.nextlayout()),
@@ -21,15 +21,15 @@ keys = [
     Key([mod], 'Left', lazy.group.prevgroup()),
     Key([mod], 'Right', lazy.group.nextgroup()),
 
-    Key([mod, 'shift'], '1', lazy.to_screen(0)),
-    Key([mod, 'shift'], '2', lazy.to_screen(1)),
+    Key([mod], 'h', lazy.to_screen(1)), # right
+    Key([mod], 'l', lazy.to_screen(0)), # left
 
     ## Application launchers
     Key([mod], 'n', lazy.spawn('/usr/bin/google-chrome')),
     Key([mod], 'e', lazy.spawn('/usr/bin/nautilus --no-desktop')),
-    Key([mod], 'Return', lazy.spawn('/usr/bin/xterm')),
+    Key([mod], 'Return', lazy.spawn('/usr/bin/gnome-terminal')),
 
-    Key([mod], 'q', lazy.window.kill()),
+    Key([mod], 'w', lazy.window.kill()),
     Key([mod], 'r', lazy.spawncmd(prompt=':')),
     Key([mod, 'control'], 'r', lazy.restart()),
     Key([mod, 'control'], 'q', lazy.shutdown()),
@@ -52,11 +52,11 @@ screens = [
             widget.Prompt(),
             widget.WindowName(fontsize=16),
 
-            widget.TextBox('cpu', 'cpu', fontsize=16),
+            widget.TextBox('cpu', 'cpu', fontsize=16, graph_color='18BAEB', fill_color='1667EB.3'),
             widget.CPUGraph(line_width=1),
-            widget.TextBox('mem', 'mem', fontsize=16),
+            widget.TextBox('mem', 'mem', fontsize=16, graph_color='18BAEB', fill_color='1667EB.3'),
             widget.MemoryGraph(line_width=1),
-            widget.TextBox('swp', 'swp', fontsize=16),
+            widget.TextBox('swp', 'swp', fontsize=16, graph_color='18BAEB', fill_color='1667EB.3'),
             widget.SwapGraph(line_width=1),
 
             widget.Systray(),
