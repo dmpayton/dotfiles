@@ -21,13 +21,15 @@ keys = [
     Key([mod], 'Left', lazy.group.prevgroup()),
     Key([mod], 'Right', lazy.group.nextgroup()),
 
-    Key([mod], 'h', lazy.to_screen(1)), # right
-    Key([mod], 'l', lazy.to_screen(0)), # left
+    Key([mod], 'h', lazy.to_screen(1)), # left
+    Key([mod], 'l', lazy.to_screen(0)), # right
 
     ## Application launchers
     Key([mod], 'n', lazy.spawn('/usr/bin/google-chrome')),
+    Key([mod], 'm', lazy.spawn('/usr/bin/audacious')),
     Key([mod], 'e', lazy.spawn('/usr/bin/nautilus --no-desktop')),
     Key([mod], 'Return', lazy.spawn('/usr/bin/gnome-terminal')),
+    Key([mod], 'y', lazy.spawn('/usr/local/bin/komodo')),
 
     Key([mod], 'w', lazy.window.kill()),
     Key([mod], 'r', lazy.spawncmd(prompt=':')),
