@@ -15,10 +15,10 @@ export CLICOLOR=1
 export LSCOLORS="ExGxcxdxbxegedabagacad"
 
 # Color aliases
-#alias ls='ls --color=auto'
-#alias grep='grep --color=auto'
-#alias fgrep='fgrep --color=auto'
-#alias egrep='egrep --color=auto'
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
 # Define some colors to use in the prompt
 NO_COLOR="\[\033[0m\]"
@@ -81,14 +81,17 @@ export PS1=$MY_PROMPT
 
 alias basic_prompt="export PS1=\$BASIC_PROMPT"
 alias my_prompt="export PS1=\$MY_PROMPT"
+alias rmpyc='find . -name "*.pyc" -exec rm {} \;'
+alias go_away='sudo poweroff'
 
 # Hooray Nano! *ducks*
 export EDITOR=nano
 
 # Env variables and functions for virtualenvwrapper.
 export WORKON_HOME=$HOME/dev/virtualenvs
-. $HOME/bin/virtualenvwrapper.sh
+#. $HOME/bin/virtualenvwrapper.sh
+. /usr/local/bin/virtualenvwrapper.sh
 
 # Some useful additional completion.
-. $HOME/bin/django_bash_completion
+#. $HOME/bin/django_bash_completion
 #. $HOME/bin/hg_completion
