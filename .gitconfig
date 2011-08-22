@@ -1,0 +1,14 @@
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    ui = true
+
+[user]
+    name = dmpayton
+    email = derek.payton@gmail.com
+
+[github]
+    user = dmpayton
+    email = derek.payton@gmail.com
+    token = *snip*
