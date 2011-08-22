@@ -1,7 +1,11 @@
 #!/bin/sh
+qiv -z ~/Pictures/Wallpapers/pixels.png
 sleep 3
 nm-applet &
+gnome-volume-control-applet &
 #rm /tmp/fluxgui_*.pid && fluxgui &
 #update-notifier &
 #gnome-power-manager &
 dropbox start
+/usr/local/bin/komodo &
+/usr/bin/google-chrome &

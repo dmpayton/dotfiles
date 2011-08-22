@@ -1,78 +1,111 @@
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from libqtile.manager import Group, Key, Screen
 from libqtile.command import lazy
 from libqtile import hook, layout, bar, widget
 
-mod = 'mod4'
+MOD = 'mod4'
+FONT_SIZE = 12
+BAR_SIZE = 24
 
 keys = [
     ## Layout, group, and screen modifiers
-    Key([mod], 'j', lazy.layout.up()),
-    Key([mod], 'k', lazy.layout.down()),
+    Key([MOD], 'j', lazy.layout.up()),
+    Key([MOD], 'k', lazy.layout.down()),
 
-    Key([mod, 'control'], 'j', lazy.layout.shuffle_up()),
-    Key([mod, 'control'], 'k', lazy.layout.shuffle_down()),
+    Key([MOD, 'control'], 'j', lazy.layout.shuffle_up()),
+    Key([MOD, 'control'], 'k', lazy.layout.shuffle_down()),
 
-    Key([mod], 'space', lazy.layout.next()),
-    Key([mod], 'Tab', lazy.nextlayout()),
+    Key([MOD], 'space', lazy.layout.next()),
+    Key([MOD], 'Tab', lazy.nextlayout()),
 
-    Key([mod, 'shift'], 'space', lazy.layout.rotate()),
-    Key([mod, 'shift'], 'Return', lazy.layout.toggle_split()),
+    Key([MOD, 'shift'], 'space', lazy.layout.rotate()),
+    Key([MOD, 'shift'], 'Return', lazy.layout.toggle_split()),
 
-    Key([mod], 'Left', lazy.group.prevgroup()),
-    Key([mod], 'Right', lazy.group.nextgroup()),
+    Key([MOD], 'Left', lazy.group.prevgroup()),
+    Key([MOD], 'Right', lazy.group.nextgroup()),
 
-    Key([mod], 'h', lazy.to_screen(1)), # left
-    Key([mod], 'l', lazy.to_screen(0)), # right
+    #Key([MOD], 'h', lazy.to_screen(1)), # left
+    #Key([MOD], 'l', lazy.to_screen(0)), # right
+
+    ## Volume Controls
+    Key([], 'XF86AudioRaiseVolume', lazy.spawn('amixer -q -c 0 sset Master 5dB+')),
+    Key([], 'XF86AudioLowerVolume', lazy.spawn('amixer -q -c 0 sset Master 5dB-')),
+    Key([], 'XF86AudioMute', lazy.spawn('amixer -q -c 0 sset Master toggle')),
+
+    ## TODO: What does the printscreen button map to?
+    Key([MOD], 'p', lazy.spawn('/usr/bin/gnome-screenshot')),
+
+    ## TODO: hotkey to toggle trackpad
+    ## xinput set-prop 15 "Device Enabled" 0
+    ## xinput set-prop 15 "Device Enabled" 1
 
     ## Application launchers
-    Key([mod], 'n', lazy.spawn('/usr/bin/google-chrome')),
-    Key([mod], 'm', lazy.spawn('/usr/bin/audacious')),
-    Key([mod], 'e', lazy.spawn('/usr/bin/nautilus --no-desktop')),
-    Key([mod], 'Return', lazy.spawn('/usr/bin/gnome-terminal')),
-    Key([mod], 'y', lazy.spawn('/usr/local/bin/komodo')),
+    Key([MOD], 'n', lazy.spawn('/usr/bin/google-chrome')),
+    Key([MOD], 'm', lazy.spawn('/usr/bin/audacious')),
+    Key([MOD], 'e', lazy.spawn('/usr/bin/nautilus --no-desktop')),
+    Key([MOD], 'Return', lazy.spawn('/usr/bin/gnome-terminal')),
 
-    Key([mod], 'w', lazy.window.kill()),
-    Key([mod], 'r', lazy.spawncmd(prompt=':')),
-    Key([mod, 'control'], 'r', lazy.restart()),
-    Key([mod, 'control'], 'q', lazy.shutdown()),
+    Key([MOD], 'w', lazy.window.kill()),
+    Key([MOD], 'r', lazy.spawncmd(prompt=':')),
+    Key([MOD, 'control'], 'r', lazy.restart()),
+    Key([MOD, 'control'], 'q', lazy.shutdown()),
+    Key([MOD, 'control'], 'l', lazy.spawn('/usr/bin/gnome-screensaver-command --lock')),
 ]
 
-# Next, we specify group names, and use the group name list to generate an appropriate
-# set of bindings for group switching.
+## Next, we specify group names, and use the group name list to generate an appropriate
+## set of bindings for group switching.
 groups = [Group(str(x)) for x in xrange(1, 10)]
 for g in groups:
-    keys.append(Key([mod], g.name, lazy.group[g.name].toscreen()))
-    keys.append(Key([mod, 'shift'], g.name, lazy.window.togroup(g.name)))
+    keys.append(Key([MOD], g.name, lazy.group[g.name].toscreen()))
+    keys.append(Key([MOD, 'shift'], g.name, lazy.window.togroup(g.name)))
 
 
-layouts = (layout.RatioTile(),)
+layouts = (
+    layout.Tile(ratio=0.5),
+    #layout.Max(),
+    #layout.Stack(stacks=2),
+    #layout.RatioTile(),
+    #layout.RatioTile(fancy=True),
+    #layout.RatioTile(ratio=.618),
+    #layout.RatioTile(ratio=.618, fancy=True)
+    )
+
+floating_layout = layout.floating.Floating(float_rules=[{'wmclass': x} for x in (
+    'audacious',
+    'gimp',
+    'Komodo_confirm_repl',
+    'Komodo_find2',
+    'pidgin',
+    'skype',
+    'Xephyr',
+    )])
 
 screens = [
     Screen(
         top=bar.Bar([
-            widget.GroupBox(fontsize=16),
-            widget.Prompt(),
-            widget.WindowName(fontsize=16),
+            widget.GroupBox(fontsize=FONT_SIZE, padding=2, borderwidth=3),
+            widget.Prompt(fontsize=FONT_SIZE),
+            widget.WindowName(fontsize=FONT_SIZE),
 
-            widget.TextBox('cpu', 'cpu', fontsize=16, graph_color='18BAEB', fill_color='1667EB.3'),
-            widget.CPUGraph(line_width=1),
-            widget.TextBox('mem', 'mem', fontsize=16, graph_color='18BAEB', fill_color='1667EB.3'),
-            widget.MemoryGraph(line_width=1),
-            widget.TextBox('swp', 'swp', fontsize=16, graph_color='18BAEB', fill_color='1667EB.3'),
-            widget.SwapGraph(line_width=1),
+            widget.CPUGraph(line_width=1, graph_color='18BAEB', fill_color='1667EB.3', border_width=1, border_color='333333', width=75),
+            widget.MemoryGraph(line_width=1, graph_color='00FE81', fill_color='00B25B.3', border_width=1, border_color='333333', width=75),
+            widget.SwapGraph(line_width=1, graph_color='5E0101', fill_color='FF5656', border_width=1, border_color='333333', width=75),
+            widget.Battery(fontsize=FONT_SIZE, format='{char}{percent:2.0%}', energy_now_file='charge_now', energy_full_file='charge_full', power_now_file='current_now', charge_char='+', discharge_char='-'),
 
             widget.Systray(),
-            widget.Volume(theme_path='/usr/share/icons/Humanity/status/24/'),
-            #widget.Weather(woeid='2400183', fontsize=16),
-            widget.Clock(fmt='%I:%M %p', fontsize=16),
-            ], 35),
+            #widget.Volume(theme_path='/usr/share/icons/Humanity/status/24/'),
+            widget.YahooWeather(location='Solana Beach, CA', metric=False, format='{condition_text} {condition_temp}°', fontsize=FONT_SIZE),
+            widget.Clock(fmt='%a %d %b %I:%M %p', fontsize=FONT_SIZE),
+            ], BAR_SIZE),
     ),
-    Screen(
-        top=bar.Bar([
-            widget.GroupBox(fontsize=16),
-            widget.WindowName(fontsize=16),
-        ], 35)
-    )
+    #Screen(
+    #    top=bar.Bar([
+    #        widget.GroupBox(fontsize=16),
+    #        widget.WindowName(fontsize=16),
+    #    ], 35)
+    #)
 ]
 
 @hook.subscribe.client_new
@@ -80,3 +113,9 @@ def dialogs(window):
     if window.window.get_wm_type() == 'dialog' \
         or window.window.get_wm_transient_for():
         window.floating = True
+    klass = window.window.get_wm_class()
+    if klass:
+        if klass[0] == 'google-chrome':
+            window.togroup('1')
+        if klass[0] == 'Komodo':
+            window.togroup('2')
