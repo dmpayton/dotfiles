@@ -52,6 +52,7 @@ keys = [
     Key([MOD, 'control'], 'r', lazy.restart()),
     Key([MOD, 'control'], 'q', lazy.shutdown()),
     Key([MOD, 'control'], 'l', lazy.spawn('/usr/bin/gnome-screensaver-command --lock')),
+    Key([MOD, 'control'], 's', lazy.spawn('/usr/bin/sudo /etc/acpi/sleep.sh')),
 ]
 
 ## Next, we specify group names, and use the group name list to generate an appropriate
@@ -74,6 +75,8 @@ layouts = (
 
 floating_layout = layout.floating.Floating(float_rules=[{'wmclass': x} for x in (
     'audacious',
+    'Download',
+    'file_progress',
     'gimp',
     'Komodo_confirm_repl',
     'Komodo_find2',
@@ -96,7 +99,9 @@ screens = [
 
             widget.Systray(),
             #widget.Volume(theme_path='/usr/share/icons/Humanity/status/24/'),
-            widget.YahooWeather(location='Solana Beach, CA', metric=False, format='{condition_text} {condition_temp}°', fontsize=FONT_SIZE),
+            widget.YahooWeather(location='Escondido, CA', metric=False, format='E:{condition_text} {condition_temp}°', fontsize=FONT_SIZE),
+            widget.YahooWeather(location='Solana Beach, CA', metric=False, format='SB:{condition_text} {condition_temp}°', fontsize=FONT_SIZE),
+            #widget.YahooWeather(location='Fallbrook, CA', metric=False, format='F:{condition_text} {condition_temp}°', fontsize=FONT_SIZE),
             widget.Clock(fmt='%a %d %b %I:%M %p', fontsize=FONT_SIZE),
             ], BAR_SIZE),
     ),
