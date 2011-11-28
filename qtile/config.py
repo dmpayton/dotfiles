@@ -13,9 +13,13 @@ keys = [
     ## Layout, group, and screen modifiers
     Key([MOD], 'j', lazy.layout.up()),
     Key([MOD], 'k', lazy.layout.down()),
-
-    Key([MOD, 'control'], 'j', lazy.layout.shuffle_up()),
-    Key([MOD, 'control'], 'k', lazy.layout.shuffle_down()),
+    Key([MOD, 'shift'], 'j', lazy.layout.shuffle_up()),
+    Key([MOD, 'shift'], 'k', lazy.layout.shuffle_down()),
+    Key([MOD, 'shift'], 'g', lazy.layout.grow()),
+    Key([MOD, 'shift'], 's', lazy.layout.shrink()),
+    Key([MOD, 'shift'], 'n', lazy.layout.normalize()),
+    Key([MOD, 'shift'], 'm', lazy.layout.maximize()),
+    Key([MOD, 'shift'], 'space', lazy.layout.flip()),
 
     Key([MOD], 'space', lazy.layout.next()),
     Key([MOD], 'Tab', lazy.nextlayout()),
@@ -64,8 +68,9 @@ for g in groups:
 
 
 layouts = (
+    #layout.xmonad.MonadTall(),
     layout.Tile(ratio=0.5),
-    #layout.Max(),
+    layout.Max(),
     #layout.Stack(stacks=2),
     #layout.RatioTile(),
     #layout.RatioTile(fancy=True),
@@ -74,14 +79,16 @@ layouts = (
     )
 
 floating_layout = layout.floating.Floating(float_rules=[{'wmclass': x} for x in (
-    'audacious',
+    #'audacious',
     'Download',
     'file_progress',
+    'file-roller',
     'gimp',
     'Komodo_confirm_repl',
     'Komodo_find2',
     'pidgin',
     'skype',
+    'Update', # Komodo update window
     'Xephyr',
     )])
 
@@ -95,7 +102,7 @@ screens = [
             widget.CPUGraph(line_width=1, graph_color='18BAEB', fill_color='1667EB.3', border_width=1, border_color='333333', width=75),
             widget.MemoryGraph(line_width=1, graph_color='00FE81', fill_color='00B25B.3', border_width=1, border_color='333333', width=75),
             widget.SwapGraph(line_width=1, graph_color='5E0101', fill_color='FF5656', border_width=1, border_color='333333', width=75),
-            widget.Battery(fontsize=FONT_SIZE, format='{char}{percent:2.0%}', energy_now_file='charge_now', energy_full_file='charge_full', power_now_file='current_now', charge_char='+', discharge_char='-'),
+            widget.Battery(fontsize=FONT_SIZE, format='{char}{percent:2.0%}', energy_now_file='charge_now', energy_full_file='charge_full', power_now_file='current_now', charge_char='↑ ', discharge_char='↓ '),
 
             widget.Systray(),
             #widget.Volume(theme_path='/usr/share/icons/Humanity/status/24/'),
@@ -120,6 +127,7 @@ def dialogs(window):
         window.floating = True
     klass = window.window.get_wm_class()
     if klass:
+        #open('/home/derek/window-classes', 'a').write('\n%s' % klass[0])
         if klass[0] == 'google-chrome':
             window.togroup('1')
         if klass[0] == 'Komodo':

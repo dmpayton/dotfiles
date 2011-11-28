@@ -1,11 +1,13 @@
 #!/bin/sh
-qiv -z ~/Pictures/Wallpapers/pixels.png
+qiv -y ~/Pictures/Wallpapers/NSTexturedFullScreenBackgroundColor.png
 sleep 3
 nm-applet &
 gnome-volume-control-applet &
+gnome-settings-daemon &
 #rm /tmp/fluxgui_*.pid && fluxgui &
 #update-notifier &
 #gnome-power-manager &
 dropbox start
 /usr/local/bin/komodo &
 /usr/bin/google-chrome &
+/usr/bin/gtk-redshift -l 33.1191667:-117.0855556 &
