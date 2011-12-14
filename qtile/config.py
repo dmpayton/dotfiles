@@ -81,6 +81,7 @@ layouts = (
 floating_layout = layout.floating.Floating(float_rules=[{'wmclass': x} for x in (
     #'audacious',
     'Download',
+    'dropbox',
     'file_progress',
     'file-roller',
     'gimp',
@@ -130,5 +131,5 @@ def dialogs(window):
         #open('/home/derek/window-classes', 'a').write('\n%s' % klass[0])
         if klass[0] == 'google-chrome':
             window.togroup('1')
-        if klass[0] == 'Komodo':
+        if klass[0] == 'sublime':
             window.togroup('2')
