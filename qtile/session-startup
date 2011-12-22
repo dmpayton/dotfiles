@@ -8,7 +8,7 @@ gnome-settings-daemon &
 #update-notifier &
 #gnome-power-manager &
 dropbox start
-#/usr/local/bin/komodo &
-/usr/local/bin/sublime &
+/usr/local/bin/komodo &
+#/usr/local/bin/sublime &
 /usr/bin/google-chrome &
 /usr/bin/gtk-redshift -l 33.1191667:-117.0855556 &

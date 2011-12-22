@@ -131,5 +131,5 @@ def dialogs(window):
         #open('/home/derek/window-classes', 'a').write('\n%s' % klass[0])
         if klass[0] == 'google-chrome':
             window.togroup('1')
-        if klass[0] == 'sublime':
+        if klass[0] == 'Komodo':
             window.togroup('2')
