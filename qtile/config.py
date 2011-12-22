@@ -56,7 +56,7 @@ keys = [
     Key([MOD, 'control'], 'r', lazy.restart()),
     Key([MOD, 'control'], 'q', lazy.shutdown()),
     Key([MOD, 'control'], 'l', lazy.spawn('/usr/bin/gnome-screensaver-command --lock')),
-    Key([MOD, 'control'], 's', lazy.spawn('/usr/bin/sudo /etc/acpi/sleep.sh')),
+    Key([MOD, 'control'], 's', lazy.spawn('/usr/bin/gksudo /etc/acpi/sleep.sh')),
 ]
 
 ## Next, we specify group names, and use the group name list to generate an appropriate
