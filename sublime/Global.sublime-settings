@@ -41,7 +41,7 @@
 
     // OS X only: When files are opened from finder, or by dragging onto the
     // dock icon, this controls if a new window is created or not.
-    "open_files_in_new_window": true,
+    "open_files_in_new_window": false,
 
     // Set to true to close windows as soon as the last file is closed, unless
     // there's a folder open within the window. This is always enabled on OS X,
