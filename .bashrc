@@ -93,7 +93,7 @@ export WORKON_HOME=$HOME/dev/virtualenvs
 . /usr/local/bin/virtualenvwrapper.sh
 
 # Ruby gems
-export PATH=$PATH:/var/lib/gems/1.8/bin/
+export PATH=$PATH:$HOME/bin/:/var/lib/gems/1.8/bin/
 
 # Some useful additional completion.
 #. $HOME/bin/django_bash_completion

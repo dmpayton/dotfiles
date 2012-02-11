@@ -1,14 +1,13 @@
 #!/bin/sh
-qiv -y ~/Pictures/Wallpapers/NSTexturedFullScreenBackgroundColor.png
+sed -i 's/widget.Systray/#widget.Systray/g' .config/qtile/config.py
+qiv -y /usr/share/backgrounds/The_Grass_aint_Greener_by_fix_pena.jpg
 sleep 3
-nm-applet &
-gnome-volume-control-applet &
 gnome-settings-daemon &
-#rm /tmp/fluxgui_*.pid && fluxgui &
+nm-applet &
+dropbox start
+#gnome-volume-control-applet &
 #update-notifier &
 #gnome-power-manager &
-dropbox start
 /usr/local/bin/komodo &
-#/usr/local/bin/sublime &
 /usr/bin/google-chrome &
-/usr/bin/gtk-redshift -l 33.1191667:-117.0855556 &
+#/usr/bin/gtk-redshift -l 33.1191667:-117.0855556 &
