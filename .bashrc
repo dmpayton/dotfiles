@@ -83,17 +83,20 @@ alias basic_prompt="export PS1=\$BASIC_PROMPT"
 alias my_prompt="export PS1=\$MY_PROMPT"
 alias rmpyc='find . -name "*.pyc" -exec rm {} \;'
 alias go_away='sudo poweroff'
+#alias chat="/usr/bin/sakura -x \"ssh -t derek@serverbox.dmpayton.com 'screen -dr chat'\""
+alias chat="ssh -t derek@serverbox.dmpayton.com 'screen -dr chat'"
 
 # Hooray Nano! *ducks*
 export EDITOR=nano
 
 # Env variables and functions for virtualenvwrapper.
-export WORKON_HOME=$HOME/dev/virtualenvs
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/dev
 #. $HOME/bin/virtualenvwrapper.sh
-. /usr/local/bin/virtualenvwrapper.sh
+. /usr/bin/virtualenvwrapper.sh
 
 # Ruby gems
-export PATH=$PATH:$HOME/bin/:/var/lib/gems/1.8/bin/
+#export PATH=$PATH:$HOME/bin/:/var/lib/gems/1.8/bin/
 
 # Some useful additional completion.
 #. $HOME/bin/django_bash_completion

@@ -48,7 +48,7 @@ class Theme(object):
 
     sep = {
         'background': bar['background'],
-        'foreground': '444444',
+        'foreground': '333333',
         'height_percent': 75,
         }
 
