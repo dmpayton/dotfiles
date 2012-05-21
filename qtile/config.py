@@ -6,16 +6,15 @@ from libqtile.command import lazy
 from libqtile.manager import Drag, Click, Group, Key, Screen
 
 
-MOD = 'mod4'
-
 ##-> Commands to spawn
 class Commands(object):
-    dmenu = 'dmenu_run -i -b -p ">" -fn "Arial-12" -nb "#000" -nf "#fff" -sb "#333" -sf "#fff"'
+    dmenu = 'dmenu_run -i -b -p ">" -fn "Open Sans-10" -nb "#000" -nf "#fff" -sb "#15181a" -sf "#fff"'
     lock_screen = 'xscreensaver-command --lock'
     screenshot = 'scrot screenshot.png'
+    trackpad_toggle = "synclient TouchpadOff=$(synclient -l | grep -c 'TouchpadOff.*=.*0')"
     volume_up = 'amixer -q -c 0 sset Master 5dB+'
     volume_down = 'amixer -q -c 0 sset Master 5dB-'
-    volume_toggle = 'amixer -q sset Master toggle'
+    volume_toggle = 'amixer -q -c 0 sset Master toggle'
 
 
 ##-> Theme + widget options
@@ -25,8 +24,8 @@ class Theme(object):
         'background': '15181a',
         }
     widget = {
-        'font': 'Arial', #'Open Sans',
-        'fontsize': 12,
+        'font': 'Open Sans',
+        'fontsize': 11,
         'background': bar['background'],
         'foreground': 'eeeeee',
         }
@@ -59,28 +58,29 @@ class Theme(object):
         })
 
     battery = widget.copy()
-    battery.update({
-        'energy_now_file': 'charge_now',
-        'energy_full_file': 'charge_full',
-        'power_now_file': 'current_now',
-        })
+    #battery.update({
+    #    'energy_now_file': 'charge_now',
+    #    'energy_full_file': 'charge_full',
+    #    'power_now_file': 'current_now',
+    #    })
 
     battery_text = battery.copy()
     battery_text.update({
-        'charge_char': '',
-        'discharge_char': '',
-        'format': '{hour:d}:{min:02d}',
+        'charge_char': '↑ ',
+        'discharge_char': '↓ ',
+        'format': '{char}{hour:d}:{min:02d}',
         })
 
     weather = widget.copy()
     weather.update({
-        'update_interval': 10,
+        'update_interval': 60,
         'metric': False,
         'format': '{condition_text} {condition_temp}°',
         })
 
 
 ##-> Keybindings
+MOD = 'mod4'
 keys = [
     ## Window Manager Controls
     Key([MOD, 'control'], 'r', lazy.restart()),
@@ -130,6 +130,7 @@ keys = [
     ## xinput list # get the ID for "Synaptics TouchPad"
     ## xinput set-prop <id> "Device Enabled" 0
     ## xinput set-prop <id> "Device Enabled" 1
+    Key([], 'XF86TouchpadToggle', lazy.spawn(Commands.trackpad_toggle)),
 
     Key([MOD, 'control'], 'l', lazy.spawn(Commands.lock_screen)),
     #Key([MOD, 'control'], 's', lazy.spawn('/usr/bin/gksudo /etc/acpi/sleep.sh')),
@@ -146,10 +147,7 @@ group_setup = (
         'layout': 'max',
         'apps': {'wm_class': ('Komodo Edit',)},
         }),
-    ('3', {
-        'spawn': 'sakura',
-        #'apps': {'wm_class': ('Sakura',)},
-        }),
+    ('3', {}),
     ('4', {'layout': 'max',}),
     ('5', {
         'layout': 'max',
@@ -190,7 +188,7 @@ screens = [
             widget.CPUGraph(graph_color='18BAEB', fill_color='1667EB.3', **Theme.graph),
             widget.MemoryGraph(graph_color='00FE81', fill_color='00B25B.3', **Theme.graph),
             widget.SwapGraph(graph_color='5E0101', fill_color='FF5656', **Theme.graph),
-            widget.NetGraph(graph_color='ffff00', fill_color='4d4d00', **Theme.graph),
+            widget.NetGraph(graph_color='ffff00', fill_color='4d4d00', interface='wlan0',  **Theme.graph),
 
             widget.CurrentLayout(**Theme.widget),
             widget.Systray(**Theme.systray),
@@ -198,8 +196,8 @@ screens = [
             widget.BatteryIcon(**Theme.battery),
             widget.Battery(**Theme.battery_text),
             widget.Sep(**Theme.sep),
-            widget.Volume(theme_path='/usr/share/icons/Humanity-Dark/status/24/', **Theme.widget),
-            widget.YahooWeather(location='Escondido, CA', **Theme.weather),
+            widget.Volume(theme_path='/usr/share/icons/gnome/24x24/status/', **Theme.widget),
+            #widget.YahooWeather(location='Escondido, CA', **Theme.weather),
             widget.Clock(fmt='%a %d %b %I:%M %p', **Theme.widget),
             ], **Theme.bar),
     ),
@@ -230,7 +228,7 @@ floating_layout = layout.floating.Floating(float_rules=[{'wmclass': x} for x in 
     'Komodo_confirm_repl',
     'Komodo_find2',
     'pidgin',
-    'skype',
+    #'skype',
     'Update', # Komodo update window
     'Xephyr',
     )])
