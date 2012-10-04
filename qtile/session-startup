@@ -1,11 +1,15 @@
 #!/bin/sh
 #sed -i 's/widget.Systray/#widget.Systray/g' .config/qtile/config.py
-qiv -y /usr/share/backgrounds/The_Grass_aint_Greener_by_fix_pena.jpg
+qiv -x /home/derek/Dropbox/Wallpapers/sfbridge.jpg
 sleep 3
 gnome-settings-daemon &
 nm-applet &
+update-notifier &
+radiotray &
+#indicator-cpufreq &
+#gnome-sound-applet &
 # batterymon &
 dropbox start
-/usr/local/bin/komodo &
+#/usr/local/bin/komodo &
 /usr/bin/google-chrome &
 #/usr/bin/gtk-redshift -l 33.1191667:-117.0855556 &

@@ -93,7 +93,7 @@ export EDITOR=nano
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/dev
 #. $HOME/bin/virtualenvwrapper.sh
-. /usr/bin/virtualenvwrapper.sh
+. /usr/local/bin/virtualenvwrapper.sh
 
 # Ruby gems
 #export PATH=$PATH:$HOME/bin/:/var/lib/gems/1.8/bin/

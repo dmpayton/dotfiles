@@ -4,17 +4,19 @@
 from libqtile import bar, hook, layout, widget
 from libqtile.command import lazy
 from libqtile.manager import Drag, Click, Group, Key, Screen
-
+from libqtile.widget import crashme
 
 ##-> Commands to spawn
 class Commands(object):
-    dmenu = 'dmenu_run -i -b -p ">" -fn "Open Sans-10" -nb "#000" -nf "#fff" -sb "#15181a" -sf "#fff"'
-    lock_screen = 'xscreensaver-command --lock'
+    dmenu = 'dmenu_run -i -b -p ">>>" -fn "Open Sans-10" -nb "#000" -nf "#fff" -sb "#15181a" -sf "#fff"'
+    lock_screen = 'gnome-screensaver-command -l'
     screenshot = 'scrot screenshot.png'
     trackpad_toggle = "synclient TouchpadOff=$(synclient -l | grep -c 'TouchpadOff.*=.*0')"
     volume_up = 'amixer -q -c 0 sset Master 5dB+'
     volume_down = 'amixer -q -c 0 sset Master 5dB-'
     volume_toggle = 'amixer -q -c 0 sset Master toggle'
+    logout = 'gnome-session-quit --logout --no-prompt'
+    shutdown = 'gnome-session-quit --power-off'
 
 
 ##-> Theme + widget options
@@ -85,6 +87,7 @@ keys = [
     ## Window Manager Controls
     Key([MOD, 'control'], 'r', lazy.restart()),
     Key([MOD, 'control'], 'q', lazy.shutdown()),
+    #Key([MOD, 'control'], 'q', lazy.spawn(Commands.logout)),
 
     ## Window Controls
     Key([MOD], 'w', lazy.window.kill()),
@@ -92,16 +95,16 @@ keys = [
     Key([MOD], 'Right', lazy.group.nextgroup()),
 
     ## Volume Controls
-    Key([], 'XF86AudioRaiseVolume', lazy.spawn(Commands.volume_up)),
-    Key([], 'XF86AudioLowerVolume', lazy.spawn(Commands.volume_down)),
-    Key([], 'XF86AudioMute', lazy.spawn(Commands.volume_toggle)),
+    #Key([], 'XF86AudioRaiseVolume', lazy.spawn(Commands.volume_up)),
+    #Key([], 'XF86AudioLowerVolume', lazy.spawn(Commands.volume_down)),
+    #Key([], 'XF86AudioMute', lazy.spawn(Commands.volume_toggle)),
 
     ## Application Launchers
     #Key([MOD], 'r', lazy.spawncmd(prompt=':')),
     Key([MOD], 'space', lazy.spawn(Commands.dmenu)),
     Key([MOD], 'n', lazy.spawn('google-chrome')),
-    Key([MOD], 'e', lazy.spawn('pcmanfm')),
-    Key([MOD], 'Return', lazy.spawn('sakura')),
+    Key([MOD], 'e', lazy.spawn('nautilus --no-desktop')),
+    Key([MOD], 'Return', lazy.spawn('gnome-terminal')),
 
     ## Layout, group, and screen modifiers
     #Key([MOD], 'j', lazy.layout.up()),
@@ -185,6 +188,8 @@ screens = [
             widget.GroupBox(**Theme.groupbox),
             widget.WindowName(**Theme.widget),
 
+            #crashme._CrashMe(),
+
             widget.CPUGraph(graph_color='18BAEB', fill_color='1667EB.3', **Theme.graph),
             widget.MemoryGraph(graph_color='00FE81', fill_color='00B25B.3', **Theme.graph),
             widget.SwapGraph(graph_color='5E0101', fill_color='FF5656', **Theme.graph),
@@ -192,22 +197,22 @@ screens = [
 
             widget.CurrentLayout(**Theme.widget),
             widget.Systray(**Theme.systray),
-            widget.Sep(**Theme.sep),
+            #widget.Sep(**Theme.sep),
             widget.BatteryIcon(**Theme.battery),
             widget.Battery(**Theme.battery_text),
-            widget.Sep(**Theme.sep),
-            widget.Volume(theme_path='/usr/share/icons/gnome/24x24/status/', **Theme.widget),
-            #widget.YahooWeather(location='Escondido, CA', **Theme.weather),
+            #widget.Sep(**Theme.sep),
+            widget.Volume(theme_path='/usr/share/icons/Humanity-Dark/status/24/', **Theme.widget),
+            widget.YahooWeather(location='Fresno, CA', **Theme.weather),
             widget.Clock(fmt='%a %d %b %I:%M %p', **Theme.widget),
             ], **Theme.bar),
     ),
-    #Screen(
-    #    top=bar.Bar([
-    #        widget.GroupBox(**Theme.widget),
-    #        widget.WindowName(**Theme.widget),
-    #        widget.CurrentLayout(**Theme.widget),
-    #    ], **Theme.bar),
-    #)
+    Screen(
+        top=bar.Bar([
+            widget.GroupBox(**Theme.widget),
+            widget.WindowName(**Theme.widget),
+            widget.CurrentLayout(**Theme.widget),
+        ], **Theme.bar),
+    )
 ]
 
 
