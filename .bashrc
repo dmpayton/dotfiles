@@ -101,3 +101,6 @@ export PROJECT_HOME=$HOME/dev
 # Some useful additional completion.
 #. $HOME/bin/django_bash_completion
 #. $HOME/bin/hg_completion
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"

@@ -1,11 +1,12 @@
 #!/bin/sh
 #sed -i 's/widget.Systray/#widget.Systray/g' .config/qtile/config.py
-qiv -x /home/derek/Dropbox/Wallpapers/sfbridge.jpg
+#qiv -x /home/derek/Dropbox/Wallpapers/sfbridge.jpg
+qiv -z /home/derek/Dropbox/Wallpapers/Shuttle.png
 sleep 3
 gnome-settings-daemon &
 nm-applet &
 update-notifier &
-radiotray &
+#radiotray &
 #indicator-cpufreq &
 #gnome-sound-applet &
 # batterymon &

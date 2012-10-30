@@ -207,8 +207,8 @@ screens = [
             ], **Theme.bar),
     ),
     Screen(
-        top=bar.Bar([
-            widget.GroupBox(**Theme.widget),
+        top=bar.Bar(widgets=[
+            widget.GroupBox(**Theme.groupbox),
             widget.WindowName(**Theme.widget),
             widget.CurrentLayout(**Theme.widget),
         ], **Theme.bar),
