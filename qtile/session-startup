@@ -1,9 +1,9 @@
 #!/bin/sh
-#sed -i 's/widget.Systray/#widget.Systray/g' .config/qtile/config.py
 #qiv -x /home/derek/Dropbox/Wallpapers/sfbridge.jpg
-qiv -z /home/derek/Dropbox/Wallpapers/Shuttle.png
-sleep 3
-gnome-settings-daemon &
+#qiv -z /home/derek/Dropbox/Wallpapers/space.png
+#qiv -y /home/derek/Dropbox/Wallpapers/hubble-deep-field.jpg
+sleep 2
+unity-settings-daemon &
 nm-applet &
 update-notifier &
 #radiotray &
@@ -12,5 +12,8 @@ update-notifier &
 # batterymon &
 dropbox start
 #/usr/local/bin/komodo &
+/usr/local/bin/subl &
 /usr/bin/google-chrome &
-#/usr/bin/gtk-redshift -l 33.1191667:-117.0855556 &
+#/usr/bin/polly &
+#/usr/bin/redshift -l 36.762169:-119.798178 &
+#buildnotifyapplet.py

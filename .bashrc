@@ -2,6 +2,8 @@
 
 export PATH=$PATH:/opt/local/bin
 
+export HISTSIZE=100000
+
 # I like confirming destructive operations.
 alias cp="cp -iv"
 alias mv="mv -iv"
@@ -71,20 +73,14 @@ __svn_ps1() {
 }
 
 ## My super cool prompt
-export MY_PROMPT="\[\e]0;\u@\h: \w\a\]"
-export MY_PROMPT="$MY_PROMPT${WHITE}[\t] ${LIGHT_GREEN}\u ${LIGHT_WHITE}@ ${LIGHT_RED}\h ${LIGHT_WHITE}in ${LIGHT_CYAN}\w${WHITE}\$(__git_ps1)\$(__hg_ps1)\$(__svn_ps1)\n${LIGHT_WHITE}\$(prompt_char)${NO_COLOR} "
+export PS1="\[\e]0;\u@\h: \w\a\]"
+export PS1="$PS1${WHITE}[\t] ${LIGHT_GREEN}\u ${LIGHT_WHITE}@ ${LIGHT_RED}\h ${LIGHT_WHITE}in ${LIGHT_CYAN}\w${WHITE}\$(__git_ps1)\$(__hg_ps1)\$(__svn_ps1)\n${LIGHT_WHITE}\$(prompt_char)${NO_COLOR} "
 
-## Basic prompt for everyone else
-export BASIC_PROMPT="${WHITE}[\t] ${LIGHT_GREEN}\u@\h${LIGHT_WHITE}:${LIGHT_BLUE}\w${WHITE}\$${NO_COLOR} "
-
-export PS1=$MY_PROMPT
-
-alias basic_prompt="export PS1=\$BASIC_PROMPT"
-alias my_prompt="export PS1=\$MY_PROMPT"
 alias rmpyc='find . -name "*.pyc" -exec rm {} \;'
 alias go_away='sudo poweroff'
 #alias chat="/usr/bin/sakura -x \"ssh -t derek@serverbox.dmpayton.com 'screen -dr chat'\""
 alias chat="ssh -t derek@serverbox.dmpayton.com 'screen -dr chat'"
+alias hdmifix="xrandr --output HDMI1 --mode 1920x1080"
 
 # Hooray Nano! *ducks*
 export EDITOR=nano
@@ -104,3 +100,29 @@ export PROJECT_HOME=$HOME/dev
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+
+
+function buildicus() {
+    cd ~/dev/django-montage;
+    workon buildicus;
+}
+
+function snaaakes() {
+    cd ~/dev/snaaakes;
+    workon snaaakes;
+}
+
+function cannabliss() {
+    cd ~/dev/cannabliss;
+    workon cannabliss;
+}
+
+function lottolishus() {
+    cd ~/dev/lottolishus;
+    workon lottolishus;
+}
+
+
+doge
+
+alias suod="sudo"
