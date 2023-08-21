@@ -2,7 +2,7 @@
 
 export PATH=$PATH:/opt/local/bin
 
-export HISTSIZE=100000
+export HISTSIZE=1000000
 
 # I like confirming destructive operations.
 alias cp="cp -iv"
@@ -45,7 +45,7 @@ LIGHT_CYAN="\[\033[1;36m\]"
 # Change the prompt character dpeending on if we're in a repository
 function prompt_char {
     git branch >/dev/null 2>/dev/null && echo '±' && return
-    hg root >/dev/null 2>/dev/null && echo '☿' && return
+    #hg root >/dev/null 2>/dev/null && echo '☿' && return
     echo '$'
 }
 
@@ -57,29 +57,11 @@ __git_ps1() {
 	fi
 }
 
-## display the current mercurial branch
-__hg_ps1() {
-    local branch="$(hg branch 2> /dev/null)"
-    if [ -n "$branch" ]; then
-        printf " (hg:%s)" "${branch}"
-    fi
-}
-
-## display the current subversion revision
-__svn_ps1() {
-    if [[ -d ".svn" ]]; then
-        printf " (svn:%s)" `svnversion`
-    fi
-}
-
 ## My super cool prompt
 export PS1="\[\e]0;\u@\h: \w\a\]"
-export PS1="$PS1${WHITE}[\t] ${LIGHT_GREEN}\u ${LIGHT_WHITE}@ ${LIGHT_RED}\h ${LIGHT_WHITE}in ${LIGHT_CYAN}\w${WHITE}\$(__git_ps1)\$(__hg_ps1)\$(__svn_ps1)\n${LIGHT_WHITE}\$(prompt_char)${NO_COLOR} "
+export PS1="$PS1${WHITE}[\t] ${LIGHT_GREEN}\u ${LIGHT_WHITE}@ ${LIGHT_RED}\h ${LIGHT_WHITE}in ${LIGHT_CYAN}\w${WHITE}\$(__git_ps1)\n${LIGHT_WHITE}\$(prompt_char)${NO_COLOR} "
 
 alias rmpyc='find . -name "*.pyc" -exec rm {} \;'
-alias go_away='sudo poweroff'
-#alias chat="/usr/bin/sakura -x \"ssh -t derek@serverbox.dmpayton.com 'screen -dr chat'\""
-alias chat="ssh -t derek@serverbox.dmpayton.com 'screen -dr chat'"
 alias hdmifix="xrandr --output HDMI1 --mode 1920x1080"
 
 # Hooray Nano! *ducks*
@@ -89,7 +71,7 @@ export EDITOR=nano
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/dev
 #. $HOME/bin/virtualenvwrapper.sh
-. /usr/local/bin/virtualenvwrapper.sh
+. /usr/bin/virtualenvwrapper.sh
 
 # Ruby gems
 #export PATH=$PATH:$HOME/bin/:/var/lib/gems/1.8/bin/
@@ -101,28 +83,8 @@ export PROJECT_HOME=$HOME/dev
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
-
-function buildicus() {
-    cd ~/dev/django-montage;
-    workon buildicus;
-}
-
-function snaaakes() {
-    cd ~/dev/snaaakes;
-    workon snaaakes;
-}
-
-function cannabliss() {
-    cd ~/dev/cannabliss;
-    workon cannabliss;
-}
-
-function lottolishus() {
-    cd ~/dev/lottolishus;
-    workon lottolishus;
-}
-
-
-doge
-
 alias suod="sudo"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

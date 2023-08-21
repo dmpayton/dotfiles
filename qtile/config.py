@@ -1,15 +1,11 @@
-﻿#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from libqtile import bar, hook, layout, widget
 from libqtile.command import lazy
 from libqtile.config import Drag, Click, Group, Key, Match, Screen
 
-
 # Theme defaults
 bar_defaults = dict(
-    size=28,
-    background=['#222222', '#111111'],
+    size=32,
+    background='#15181a', #['#222222', '#111111'],
 )
 
 layout_defaults = dict(
@@ -20,11 +16,11 @@ layout_defaults = dict(
 )
 
 widget_defaults = dict(
-    font='Ubuntu',
-    fontsize=14,
+    font='Fira Sans',
+    fontsize=18,
     padding=5,
     background=bar_defaults['background'],
-    foreground=['#ffffff', '#ffffff', '#999999'],
+    foreground='#ffffff', #['#ffffff', '#ffffff', '#999999'],
     fontshadow='#000000',
 )
 
@@ -80,41 +76,58 @@ class Widget(object):
        power_now_file='current_now',
     )
 
-    battery_text = battery.copy()
-    battery_text.update(
-        charge_char='',  # fa-arrow-up
-        discharge_char='',  # fa-arrow-down
-        format='{char} {hour:d}:{min:02d}',
-    )
 
-    weather = dict(
-        update_interval=60,
-        metric=False,
-        format='{condition_text} {condition_temp}°',
-    )
+screens = [
+    Screen(
+        # bottom=bar.Bar(widgets=[Powerline()], **bar_defaults),
+        top=bar.Bar(widgets=[
+            widget.GroupBox(**Widget.groupbox),
+            widget.WindowName(),
 
+            widget.CPUGraph(graph_color='#18BAEB', fill_color='#1667EB.3', **Widget.graph),
+            widget.MemoryGraph(graph_color='#00FE81', fill_color='#00B25B.3', **Widget.graph),
+            widget.SwapGraph(graph_color='#5E0101', fill_color='#FF5656', **Widget.graph),
+            widget.NetGraph(graph_color='#ffff00', fill_color='#4d4d00', interface='wlp2s0', **Widget.graph),
+            widget.HDDBusyGraph(device='sda', **Widget.graph),
 
-# Commands to spawn
-class Commands(object):
-    browser = 'google-chrome'
-    dmenu = 'dmenu_run -i -b -p ">>>" -fn "-*-fixed-*-*-*-*-18-*-*-*-*-*-*-*" -nb "#15181a" -nf "#fff" -sb "#333" -sf "#fff"'
-    file_manager = 'nautilus --no-desktop'
-    lock_screen = 'gnome-screensaver-command -l'
-    screenshot = 'gnome-screenshot'
-    terminal = 'gnome-terminal'
-    trackpad_toggle = "synclient TouchpadOff=$(synclient -l | grep -c 'TouchpadOff.*=.*0')"
-    volume_up = 'amixer -q -c 1 sset Master 5dB+'
-    volume_down = 'amixer -q -c 1 sset Master 5dB-'
-    volume_toggle = 'amixer -q -D pulse sset Master 1+ toggle'
+            widget.ThermalSensor(metric=False, threshold=158),
 
+            widget.Sep(**Widget.sep),
+
+            widget.CurrentLayout(),
+            widget.Systray(**Widget.systray),
+            widget.BatteryIcon(**Widget.battery),
+            widget.Volume(emoji=True),
+            widget.Clock(format='%a %d %b %I:%M %p'),
+            ], **bar_defaults),
+    ),
+    # Screen(
+    #     top=bar.Bar(widgets=[
+    #         widget.GroupBox(**Widget.groupbox),
+    #         widget.WindowName(),
+    #         widget.CurrentLayout(),
+    #     ], **bar_defaults),
+    # )
+]
+
+# Layouts
+layouts = (
+    layout.Tile(ratio=0.5, **layout_defaults),
+    layout.Max(**layout_defaults),
+    layout.RatioTile(**layout_defaults),
+    layout.Matrix(**layout_defaults),
+    # layout.MonadTall(**layout_defaults),
+    # layout.Stack(**layout_defaults),
+    # layout.Zoomy(**layout_defaults),
+)
 
 # Keybindings
 mod = 'mod4'
 keys = [
     # Window Manager Controls
     Key([mod, 'control'], 'r', lazy.restart()),
-    Key([mod, 'control'], 'q', lazy.shutdown()),
-    Key([mod, 'control'], 'l', lazy.spawn(Commands.lock_screen)),
+    # Key([mod, 'control'], 'q', lazy.shutdown()),
+    Key([mod, 'control'], 'q', lazy.spawn('xflock4')),
 
     # Window Controls
     Key([mod], 'w', lazy.window.kill()),
@@ -132,12 +145,12 @@ keys = [
     #Key([mod, 'shift'], 'space', lazy.layout.flip()),
 
     # Switch groups
-    Key([mod], 'Left', lazy.screen.prevgroup()),
-    Key([mod], 'Right', lazy.screen.nextgroup()),
+    Key([mod], 'Left', lazy.screen.prev_group()),
+    Key([mod], 'Right', lazy.screen.next_group()),
 
     # Cycle layouts
-    Key([mod], 'Up', lazy.nextlayout()),
-    Key([mod], 'Down', lazy.prevlayout()),
+    Key([mod], 'Up', lazy.next_layout()),
+    Key([mod], 'Down', lazy.prev_layout()),
 
     # Change window focus
     Key([mod], 'Tab', lazy.layout.next()),
@@ -147,49 +160,55 @@ keys = [
     Key([mod], 'h', lazy.to_screen(0)),  # left
     Key([mod], 'l', lazy.to_screen(1)),  # right
 
-    # Commands: Application Launchers
-    Key([mod], 'space', lazy.spawn(Commands.dmenu)),
-    Key([mod], 'n', lazy.spawn(Commands.browser)),
-    Key([mod], 'e', lazy.spawn(Commands.file_manager)),
-    Key([mod], 'Return', lazy.spawn(Commands.terminal)),
+    # Application Launchers
+    Key([mod], 'space', lazy.spawn('ulauncher-toggle')),
+    Key([mod], 'e', lazy.spawn('thunar')),
+    Key([mod], 'Return', lazy.spawn('xfce4-terminal')),
 
-    # Commands: Volume Controls
-    Key([], 'XF86AudioRaiseVolume', lazy.spawn(Commands.volume_up)),
-    Key([], 'XF86AudioLowerVolume', lazy.spawn(Commands.volume_down)),
-    Key([], 'XF86AudioMute', lazy.spawn(Commands.volume_toggle)),
+    # Volume Controls
+    Key([], 'XF86AudioRaiseVolume', lazy.spawn('amixer -q sset Master 5%+')),
+    Key([], 'XF86AudioLowerVolume', lazy.spawn('amixer -q sset Master 5%-')),
+    Key([], 'XF86AudioMute', lazy.spawn('amixer -q sset Master 1+ toggle')),
 
-    Key([], 'XF86TouchpadToggle', lazy.spawn(Commands.trackpad_toggle)),
+    # Toggle Trackpad
+    Key([], 'XF86TouchpadToggle', lazy.spawn('xinput-toggle -r "TouchPad"')),
 
     # TODO: What does the PrtSc button map to?
-    Key([mod], 'p', lazy.spawn(Commands.screenshot)),
+    Key([mod], 'p', lazy.spawn('xfce4-screenshooter')),
 ]
 
 
 # Groups
 group_setup = (
-    ('', {  # fa-globe
+    ('', {  # fa-globe
         'layout': 'max',
-        'matches': [Match(wm_class=('Firefox', 'Google-chrome'))],
+        'matches': [Match(wm_class=('Navigator', 'firefox', 'Google-chrome'))],
     }),
     ('', {  # fa-code
         'layout': 'max',
-        'matches': [Match(wm_class=('Sublime',))],
+        'matches': [Match(wm_class=('sublime_text', 'Sublime_text'))],
     }),
-    ('', {}),  # fa-terminal
-    ('', {'layout': 'max'}),
-    ('', {  # fa-windows
+    ('', {  # fa-terminal
+        'matches': [Match(wm_class=('xfce4-terminal',))],
+    }),
+    ('', {  # fa-message-lines
         'layout': 'max',
-        'matches': [Match(wm_class=('VirtualBox',))],
+        'matches': [Match(wm_class=(
+            'discord',
+            'slack', 'Slack',
+            'signal', 'Signal',
+            'microsoft teams - preview',
+            'Microsoft Teams - Preview'
+        ))],
     }),
-    ('', {  # fa-steam
+    ('', {  # fa-spotify
         'layout': 'max',
-        'matches': [Match(wm_class=('Steam',))],
+        'matches': [Match(wm_class=('spotify', 'Spotify'))],
     }),
-    ('', {}),  # fa-circle-o
-    ('', {}),  # fa-dot-circle-o
-    ('', {  # fa-circle
-        'layout': 'max',
-    }),
+    ('', {}),  # fa-circle-6
+    ('', {}),  # fa-circle-7
+    ('', {}),  # fa-circle-8
+    ('', {}),  # fa-circle-9
 )
 
 groups = []
@@ -207,62 +226,17 @@ for idx, (label, config) in enumerate(group_setup):
 
 # Mouse
 mouse = (
-    Drag([mod], 'Button1', lazy.window.set_position_floating(),
-        start=lazy.window.get_position()),
-    Drag([mod], 'Button3', lazy.window.set_size_floating(),
-        start=lazy.window.get_size()),
+    Drag([mod], 'Button1',
+        lazy.window.set_position_floating(),
+        start=lazy.window.get_position()
+    ),
+    Drag([mod], 'Button3',
+        lazy.window.set_size_floating(),
+        start=lazy.window.get_size()
+    ),
 )
 
 bring_front_click = True
-
-
-# Screens
-screens = [
-    Screen(
-        # bottom=bar.Bar(widgets=[Powerline()], **bar_defaults),
-        top=bar.Bar(widgets=[
-            widget.GroupBox(**Widget.groupbox),
-            widget.WindowName(),
-
-            widget.CPUGraph(graph_color='#18BAEB', fill_color='#1667EB.3', **Widget.graph),
-            widget.MemoryGraph(graph_color='#00FE81', fill_color='#00B25B.3', **Widget.graph),
-            widget.SwapGraph(graph_color='#5E0101', fill_color='#FF5656', **Widget.graph),
-            widget.NetGraph(graph_color='#ffff00', fill_color='#4d4d00', interface='wlan0', **Widget.graph),
-            widget.HDDBusyGraph(device='sda', **Widget.graph),
-            widget.HDDBusyGraph(device='sdb', **Widget.graph),
-
-            widget.ThermalSensor(metric=False, threshold=158),
-            widget.Sep(**Widget.sep),
-
-            widget.CurrentLayout(),
-            widget.Systray(**Widget.systray),
-            widget.BatteryIcon(**Widget.battery),
-            # widget.Battery(**Widget.battery_text),
-            widget.Volume(theme_path='/usr/share/icons/Humanity/status/22/', cardid=1),
-            widget.YahooWeather(location='Fresno, CA', **Widget.weather),
-            widget.Clock(fmt='%a %d %b %I:%M %p'),
-            ], **bar_defaults),
-    ),
-    Screen(
-        top=bar.Bar(widgets=[
-            widget.GroupBox(**Widget.groupbox),
-            widget.WindowName(),
-            widget.CurrentLayout(),
-        ], **bar_defaults),
-    )
-]
-
-
-# Layouts
-layouts = (
-    layout.Tile(ratio=0.5, **layout_defaults),
-    layout.Max(**layout_defaults),
-    layout.RatioTile(**layout_defaults),
-    layout.Matrix(**layout_defaults),
-    layout.MonadTall(**layout_defaults),
-    layout.Stack(**layout_defaults),
-    layout.Zoomy(**layout_defaults),
-)
 
 floating_layout = layout.floating.Floating(
     auto_float_types=(
@@ -271,32 +245,27 @@ floating_layout = layout.floating.Floating(
         'splash',
         'dialog',
     ),
-    float_rules=[{'wmclass': x} for x in (
-        'audacious',
-        'Download',
-        'dropbox',
-        'file_progress',
-        'file-roller',
-        'gimp',
-        'Komodo_confirm_repl',
-        'Komodo_find2',
-        'pidgin',
-        'skype',
-        'Transmission',
-        'Update',  # Komodo update window
-        'Xephyr',
-    )],
+    # float_rules=[{'wmclass': x} for x in (
+    #     'audacious',
+    #     'Download',
+    #     'dropbox',
+    #     'file_progress',
+    #     'file-roller',
+    #     'gimp',
+    #     'Komodo_confirm_repl',
+    #     'Komodo_find2',
+    #     'pidgin',
+    #     'skype',
+    #     'Transmission',
+    #     'Update',  # Komodo update window
+    #     'Xephyr',
+    # )],
     **layout_defaults
 )
 
-
-def main(qtile):
-    pass
-
-
-@hook.subscribe.client_new
-def floating_dialogs(window):
-    dialog = window.window.get_wm_type() == 'dialog'
-    transient = window.window.get_wm_transient_for()
-    if dialog or transient:
-        window.floating = True
+# @hook.subscribe.client_new
+# def floating_dialogs(window):
+#     dialog = window.window.get_wm_type() == 'dialog'
+#     transient = window.window.get_wm_transient_for()
+#     if dialog or transient:
+#         window.floating = True
