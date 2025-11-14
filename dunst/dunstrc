@@ -1,0 +1,57 @@
+[global]
+    ### Font / layout
+    # Adjust the exact name to whatever `fc-list | grep "Fira"` shows
+    font = Play 18
+
+    #width = 320
+    #height = (0, 250)
+    origin = top-right
+    offset = (15, 64) # (x, y) from screen corner
+    padding = 20
+    horizontal_padding = 20
+    corner_radius = 5
+
+    ### Colors
+    background = "#0F1B37"      # theme['background']
+    foreground = "#44D6E3"      # theme['foreground']
+    frame_width = 1
+    frame_color = "#E31677"     # theme['accent']
+    separator_color = frame
+
+    enable_recursive_icon_lookup = true
+
+    ### Behaviors
+    transparency = 0
+    idle_threshold = 120
+    markup = full
+    word_wrap = yes
+    ignore_newline = no
+    show_indicators = no
+
+[urgency_low]
+    background = "#070d1b" # theme['alt_background']
+    foreground = "#44D6E3"
+    frame_color = "#982D63" # theme['disabled']
+    timeout = 5
+
+[urgency_normal]
+    background = "#0F1B37"
+    foreground = "#44D6E3"
+    frame_color = "#E31677"
+    timeout = 7
+
+[urgency_critical]
+    background = "#0F1B37"
+    foreground = "#F2C03B" # theme['urgent']
+    frame_color = "#F2C03B"
+    timeout = 0
+
+# Force monospace and nice formatting for notifications sent as -a qtile
+[qtile-cal]
+    appname = qtile-cal
+    background = "#0F1B37"
+    foreground = "#44D6E3"
+    frame_color = "#44D6E3"
+    format = "%b"
+
+    timeout = 0

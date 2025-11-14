@@ -1,148 +1,158 @@
-from libqtile import bar, hook, layout, widget
-from libqtile.command import lazy
-from libqtile.config import Drag, Click, Group, Key, Match, Screen
+import os
+import re
+import subprocess
+import time
 
-# Theme defaults
+from libqtile import bar, hook, layout, qtile
+from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.lazy import lazy
+
+from qtile_extras import widget
+
+from sticky import toggle_sticky_windows
+from variables import *
+
+#
+# HOOKS & FUNCTIONS
+#
+
+@hook.subscribe.startup_once
+def autostart():
+    subprocess.Popen([
+        os.path.expanduser(autostart_file)
+    ])
+
+
+@lazy.function
+def adjust_brightness(qtile, direction):
+    '''
+        Adjust the brightness by 10% in 1% increments for a nice fade.
+    '''
+    amount = '+1%' if direction == 1 else '1%-'
+    for x in range(10):
+        for device in ['nvidia_0', 'intel_backlight']:
+            subprocess.run(f'brightnessctl -d {device} set {amount}', shell=True)
+
+
+#
+# DEFAULTS
+#
+
 bar_defaults = dict(
-    size=32,
-    background='#15181a', #['#222222', '#111111'],
+    size=bar_size,
+    background=bar_background_color + format(int(bar_background_opacity * 255), '02x'),
+    border_color=bar_border_color,
+    border_width=[0, 0, 1, 0],
+    margin=[bar_top_margin, bar_right_margin, bar_bottom_margin - layouts_margin, bar_left_margin],
+    opacity=bar_global_opacity
 )
 
 layout_defaults = dict(
-    border_width=1,
-    margin=0,
-    border_focus='#336699',
-    border_normal='#333333',
+    border_width=layouts_border_width,
+    margin=layouts_margin,
+    border_focus=layouts_border_focus_color,
+    border_normal=layouts_border_color,
+    border_on_single=layouts_border_on_single
 )
 
-widget_defaults = dict(
-    font='Fira Sans',
-    fontsize=18,
-    padding=5,
-    background=bar_defaults['background'],
-    foreground='#ffffff', #['#ffffff', '#ffffff', '#999999'],
-    fontshadow='#000000',
+screen_defaults = dict(
+    wallpaper=os.path.expanduser(wallpaper_file),
+    wallpaper_mode=wallpaper_mode,
 )
+
+widget_background = {
+    'colour': widget_background_color + format(int(widget_background_opacity * 255), '02x'),
+    'radius': widget_background_radius,
+    'filled': True,
+    'padding_y': widget_background_y_padding,
+    'padding_x': widget_background_x_padding,
+    'group': True,
+}
+
+widget_defaults = dict(
+    font=bar_font,
+    foreground=bar_foreground_color,
+    fontsize=bar_font_size,
+    padding=widget_padding,
+)
+
+extension_defaults = widget_defaults.copy()
 
 
 class Widget(object):
     ''' Container for individual widget style options '''
 
+    clock = dict(
+        format='%a %d %b %I:%M %p',
+        padding=15,
+        decorations=[widget.decorations.RectDecoration(**widget_background)],
+        mouse_callbacks={
+            'Button1': lambda: os.system('notify-cal.py')
+        },
+    )
+
     graph = dict(
-        background='#000000',
+        background=bar_background_color,
         border_width=0,
-        border_color='#000000',
-        line_width=1,
-        margin_x=0,
-        margin_y=0,
-        width=50,
+        # border_color='#000000',
+        line_width=2,
+        margin_x=5,
+        margin_y=10,
+        type='linefill',
+        width=75,
     )
 
     groupbox = dict(
-        active=widget_defaults['foreground'],
-        inactive=['#444444', '#333333'],
+        active=theme['foreground'],
+        inactive=theme['accent'],
 
-        this_screen_border=layout_defaults['border_focus'],
-        this_current_screen_border=layout_defaults['border_focus'],
-        other_screen_border='#444444',
+        this_screen_border=theme['accent'],
+        this_current_screen_border=theme['accent'],
+        other_screen_border=theme['disabled'],
 
-        urgent_text=widget_defaults['foreground'],
-        urgent_border='#ff0000',
+        urgent_alert_method='line',
+        urgent_text=theme['urgent'],
+        urgent_border=theme['urgent'],
 
-        highlight_method='block',
-        rounded=True,
+        highlight_method='line',
+        highlight_color=theme['background'],
+        # rounded=True,
 
         # margin=-1,
-        padding=3,
-        borderwidth=2,
+        # padding=50,
+        borderwidth=3,
         disable_drag=True,
         invert_mouse_wheel=True,
     )
 
     sep = dict(
-        foreground=layout_defaults['border_normal'],
+        foreground=theme['disabled'],
         height_percent=100,
-        padding=5,
+        padding=10,
     )
 
     systray = dict(
-        icon_size=16,
+        icon_size=20,
         padding=5,
     )
 
-    battery = dict(
-       energy_now_file='charge_now',
-       energy_full_file='charge_full',
-       power_now_file='current_now',
-    )
+#
+# KEYBINDINGS
+#
 
-
-screens = [
-    Screen(
-        # bottom=bar.Bar(widgets=[Powerline()], **bar_defaults),
-        top=bar.Bar(widgets=[
-            widget.GroupBox(**Widget.groupbox),
-            widget.WindowName(),
-
-            widget.CPUGraph(graph_color='#18BAEB', fill_color='#1667EB.3', **Widget.graph),
-            widget.MemoryGraph(graph_color='#00FE81', fill_color='#00B25B.3', **Widget.graph),
-            widget.SwapGraph(graph_color='#5E0101', fill_color='#FF5656', **Widget.graph),
-            widget.NetGraph(graph_color='#ffff00', fill_color='#4d4d00', interface='wlp2s0', **Widget.graph),
-            widget.HDDBusyGraph(device='sda', **Widget.graph),
-
-            widget.ThermalSensor(metric=False, threshold=158),
-
-            widget.Sep(**Widget.sep),
-
-            widget.CurrentLayout(),
-            widget.Systray(**Widget.systray),
-            widget.BatteryIcon(**Widget.battery),
-            widget.Volume(emoji=True),
-            widget.Clock(format='%a %d %b %I:%M %p'),
-            ], **bar_defaults),
-    ),
-    # Screen(
-    #     top=bar.Bar(widgets=[
-    #         widget.GroupBox(**Widget.groupbox),
-    #         widget.WindowName(),
-    #         widget.CurrentLayout(),
-    #     ], **bar_defaults),
-    # )
-]
-
-# Layouts
-layouts = (
-    layout.Tile(ratio=0.5, **layout_defaults),
-    layout.Max(**layout_defaults),
-    layout.RatioTile(**layout_defaults),
-    layout.Matrix(**layout_defaults),
-    # layout.MonadTall(**layout_defaults),
-    # layout.Stack(**layout_defaults),
-    # layout.Zoomy(**layout_defaults),
-)
-
-# Keybindings
-mod = 'mod4'
 keys = [
     # Window Manager Controls
     Key([mod, 'control'], 'r', lazy.restart()),
-    # Key([mod, 'control'], 'q', lazy.shutdown()),
-    Key([mod, 'control'], 'q', lazy.spawn('xflock4')),
+    Key([mod, 'control', 'shift'], 'q', lazy.shutdown()),
+    Key([mod, 'control'], 'q', lazy.spawn(cmd_lock)),
 
     # Window Controls
     Key([mod], 'w', lazy.window.kill()),
     Key([mod], 'f', lazy.window.toggle_floating()),
 
-    # Layout, group, and screen modifiers
-    #Key([mod], 'j', lazy.layout.up()),
-    #Key([mod], 'k', lazy.layout.down()),
-    #Key([mod, 'shift'], 'j', lazy.layout.shuffle_up()),
-    #Key([mod, 'shift'], 'k', lazy.layout.shuffle_down()),
-    #Key([mod, 'shift'], 'g', lazy.layout.grow()),
-    #Key([mod, 'shift'], 's', lazy.layout.shrink()),
-    #Key([mod, 'shift'], 'n', lazy.layout.normalize()),
-    #Key([mod, 'shift'], 'm', lazy.layout.maximize()),
-    #Key([mod, 'shift'], 'space', lazy.layout.flip()),
+    # Move window stack in current layout
+    Key([mod, 'shift'], 'Up', lazy.layout.shuffle_up()),
+    Key([mod, 'shift'], 'Down', lazy.layout.shuffle_down()),
 
     # Switch groups
     Key([mod], 'Left', lazy.screen.prev_group()),
@@ -156,14 +166,15 @@ keys = [
     Key([mod], 'Tab', lazy.layout.next()),
     Key([mod, 'shift'], 'Tab', lazy.layout.previous()),
 
-    # Switch focus to other screens
-    Key([mod], 'h', lazy.to_screen(0)),  # left
-    Key([mod], 'l', lazy.to_screen(1)),  # right
+    Key([mod, 'shift'], 's', toggle_sticky_windows()),
 
-    # Application Launchers
-    Key([mod], 'space', lazy.spawn('ulauncher-toggle')),
-    Key([mod], 'e', lazy.spawn('thunar')),
-    Key([mod], 'Return', lazy.spawn('xfce4-terminal')),
+    # Switch focus to other screens
+    Key([mod, 'shift'], 'Left', lazy.to_screen(0)),
+    Key([mod, 'shift'], 'Right', lazy.to_screen(1)),
+
+    # Screen Brightness
+    Key([], 'XF86MonBrightnessUp', adjust_brightness(+1)),
+    Key([], 'XF86MonBrightnessDown', adjust_brightness(-1)),
 
     # Volume Controls
     Key([], 'XF86AudioRaiseVolume', lazy.spawn('amixer -q sset Master 5%+')),
@@ -173,42 +184,115 @@ keys = [
     # Toggle Trackpad
     Key([], 'XF86TouchpadToggle', lazy.spawn('xinput-toggle -r "TouchPad"')),
 
-    # TODO: What does the PrtSc button map to?
-    Key([mod], 'p', lazy.spawn('xfce4-screenshooter')),
+    # Application Launchers
+    Key([mod], 'space', lazy.spawn(cmd_launcher)),
+    Key([mod], 'e', lazy.spawn(cmd_file_manager)),
+    Key([mod], 'Return', lazy.spawn(cmd_terminal)),
+    Key([], 'Print', lazy.spawn(cmd_screenshot)),
 ]
 
+#
+# SCREENS
+#
 
-# Groups
+screens = [
+    Screen(
+        top=bar.Bar(widgets=[
+            widget.GroupBox(**Widget.groupbox),
+            widget.WindowName(padding=15, decorations=[widget.decorations.RectDecoration(**widget_background)]),
+
+            widget.Spacer(length=5),
+
+            widget.CPUGraph(graph_color='#FF5656', fill_color='#4B2A3F', **Widget.graph),
+            widget.MemoryGraph(graph_color='#00FE81', fill_color='#0B544A', **Widget.graph),
+            widget.SwapGraph(graph_color='#F2C03B', fill_color='#484438', **Widget.graph),
+            widget.NetGraph(graph_color='#18BAEB', fill_color='#114364', interface='wlp0s20f3', **Widget.graph),
+
+            widget.CurrentLayoutIcon(scale=.4),
+            widget.StatusNotifier(),
+            widget.Systray(**Widget.systray),
+
+            widget.Spacer(length=5),
+
+            widget.Clock(**Widget.clock),
+        ], **bar_defaults),
+        **screen_defaults
+    ),
+    Screen(
+        top=bar.Bar(widgets=[
+            widget.GroupBox(**Widget.groupbox),
+            widget.WindowName(padding=15, decorations=[widget.decorations.RectDecoration(**widget_background)]),
+            widget.CurrentLayoutIcon(scale=.4),
+            widget.Clock(**Widget.clock),
+        ], **bar_defaults),
+        **screen_defaults
+    )
+]
+
+#
+# LAYOUTS
+#
+
+layouts = (
+    layout.Tile(ratio=0.5, **layout_defaults),
+    layout.Max(**layout_defaults),
+    layout.RatioTile(**layout_defaults),
+    layout.Matrix(**layout_defaults),
+    layout.VerticalTile(**layout_defaults),
+    # layout.MonadTall(**layout_defaults),
+    # layout.Stack(**layout_defaults),
+    # layout.Zoomy(**layout_defaults),
+)
+
+floating_layout = layout.Floating(
+    float_rules=[
+        *layout.Floating.default_float_rules
+    ],
+    **layout_defaults
+)
+
+
+#
+# GROUPS
+#
+
 group_setup = (
-    ('', {  # fa-globe
+    ('', {  # fa-internet-explorer
         'layout': 'max',
-        'matches': [Match(wm_class=('Navigator', 'firefox', 'Google-chrome'))],
+        'matches': [Match(wm_class=re.compile(r"^(Navigator|firefox|Google\-chrome)$"))],
     }),
     ('', {  # fa-code
         'layout': 'max',
-        'matches': [Match(wm_class=('sublime_text', 'Sublime_text'))],
+        'matches': [Match(wm_class=(
+            'sublime_text', 'Sublime_text',
+            'code', 'Code',
+        ))],
     }),
     ('', {  # fa-terminal
-        'matches': [Match(wm_class=('xfce4-terminal',))],
+        'matches': [Match(wm_class=[cmd_terminal])],
     }),
-    ('', {  # fa-message-lines
+    ('', {  # fa-message-lines
         'layout': 'max',
         'matches': [Match(wm_class=(
-            'discord',
+            'discord', 'Discord',
             'slack', 'Slack',
             'signal', 'Signal',
             'microsoft teams - preview',
             'Microsoft Teams - Preview'
+            'teams-for-linux',
+            'Teams-for-linux'
         ))],
     }),
-    ('', {  # fa-spotify
+    ('', {  # fa-spotify
         'layout': 'max',
-        'matches': [Match(wm_class=('spotify', 'Spotify'))],
+        'matches': [Match(wm_class=(
+            'spotify', 'Spotify',
+        ))],
     }),
-    ('', {}),  # fa-circle-6
-    ('', {}),  # fa-circle-7
-    ('', {}),  # fa-circle-8
-    ('', {}),  # fa-circle-9
+    ('6', {}),  # fa-circle-6
+    ('7', {}),  # fa-circle-7
+    ('8', {}),  # fa-circle-8
+    ('9', {}),  # fa-circle-9
 )
 
 groups = []
@@ -223,8 +307,10 @@ for idx, (label, config) in enumerate(group_setup):
     # mod + shift + hotkey = move focused window to group
     keys.append(Key([mod, 'shift'], hotkey, lazy.window.togroup(label)))
 
+#
+# MOUSE
+#
 
-# Mouse
 mouse = (
     Drag([mod], 'Button1',
         lazy.window.set_position_floating(),
@@ -237,35 +323,4 @@ mouse = (
 )
 
 bring_front_click = True
-
-floating_layout = layout.floating.Floating(
-    auto_float_types=(
-        'notification',
-        'toolbar',
-        'splash',
-        'dialog',
-    ),
-    # float_rules=[{'wmclass': x} for x in (
-    #     'audacious',
-    #     'Download',
-    #     'dropbox',
-    #     'file_progress',
-    #     'file-roller',
-    #     'gimp',
-    #     'Komodo_confirm_repl',
-    #     'Komodo_find2',
-    #     'pidgin',
-    #     'skype',
-    #     'Transmission',
-    #     'Update',  # Komodo update window
-    #     'Xephyr',
-    # )],
-    **layout_defaults
-)
-
-# @hook.subscribe.client_new
-# def floating_dialogs(window):
-#     dialog = window.window.get_wm_type() == 'dialog'
-#     transient = window.window.get_wm_transient_for()
-#     if dialog or transient:
-#         window.floating = True
+floats_kept_above = True

@@ -12,3 +12,5 @@
     user = dmpayton
     email = derek.payton@gmail.com
 [heroku]
+[core]
+	editor = nano

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Qtile (XSession)
+Comment=This session logs you into Qtile
+Exec=/etc/X11/Xsession
+Icon=
+Type=XSession
